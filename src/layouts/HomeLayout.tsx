@@ -7,7 +7,7 @@ export default function HomeLayout({}: Props) {
   return (
     <div className="min-h-screen w-full  bg-slate-800 text-white">
         <Header/>
-        <Outlet/>
+          <Outlet/>
     </div>
   )
 }
