@@ -1,35 +1,29 @@
+import { BASE_URL_SERVER } from "@/lib/constants";
 import BlogPost from "./BlogPost";
+import { useQuery } from "@tanstack/react-query";
 
-type Props = {}
+import { TPost } from "@/lib/types";
+
+type Props = {};
 
 export default function BlogList({}: Props) {
-    const blogs = [
-      {
-        title: "BlogTitle",
-        description: "BlogDescription",
-        createdAt: "12/12/21",
-        id: '1',
-      },
-      {
-        title: "BlogTitle",
-        description: "BlogDescription",
-        createdAt: "12/12/21",
-        id: '2',
-      },
-      {
-        title: "BlogTitle",
-        description: "BlogDescription",
-        createdAt: "12/12/21",
-        id: '3',
-      },
-    ];
+  async function fetchData() {
+    const res = await fetch(`${BASE_URL_SERVER}/posts?skip=0`, {
+      method: "GET",
+
+    });
+    return await res.json();
+  }
+  const { data } = useQuery<{posts:TPost[]}>({
+    queryKey: ["posts"],
+    queryFn: fetchData,
+  });
+
   return (
     <div className=" flex flex-col gap-5 w-[90vw] items-center">
-      {
-        blogs.map( (blog,index) => (
-          <BlogPost blog={blog} key={index}/>
-        ))
-      }
+      {data?.posts?.map((post, index) => (
+        <BlogPost post={post} key={index} />
+      ))}
     </div>
-  )
+  );
 }

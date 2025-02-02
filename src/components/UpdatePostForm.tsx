@@ -1,5 +1,5 @@
 import { createPostSchema } from "@/lib/schema";
-import { useForm, UseFormReturn } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
   Form,
@@ -9,52 +9,60 @@ import {
   FormLabel,
   FormMessage,
 } from "./ui/form";
+import { Input } from "./ui/input";
 import { Textarea } from "./ui/textarea";
 import { Button } from "./ui/button";
 import { z } from "zod";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { TPost } from "@/lib/types";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { BASE_URL_SERVER } from "@/lib/constants";
+import { useNavigate, useParams } from "react-router-dom";
 import TitleField from "./TitleField";
 import DescriptionField from "./DescriptionField";
 
-type Props = {};
+type Props = {
+  initialFormData?: TPost;
+};
 
-export type formValues = z.infer<typeof createPostSchema>;
+type formValues = z.infer<typeof createPostSchema>;
 
-export type TForm = UseFormReturn<formValues, any, undefined>;
+export default function UpdatePostForm({}: Props) {
+  const navigate = useNavigate();
+  const queryClient = useQueryClient();
+  const { id } = useParams();
+  const { data } = useQuery<{ posts: TPost[] }>({ queryKey: ["posts"] });
+  const initialFormData = data?.posts.find((post) => post._id === id);
 
-export default function CreatePostForm({}: Props) {
-  const queryClient = useQueryClient()
   const { mutate,isPending } = useMutation({
-    mutationKey: ["create-post"],
+    mutationKey: ["update-post"],
     mutationFn: async (data: formValues) => {
-      await fetch(`${BASE_URL_SERVER}/posts`, {
-        method: "POST",
+      await fetch(`${BASE_URL_SERVER}/posts/${initialFormData?._id}`, {
+        method: "PUT",
         body: JSON.stringify(data),
         headers: {
           "Content-Type": "application/json",
         },
       });
     },
-    onSuccess(){
-      queryClient.invalidateQueries({queryKey:['posts']})
-    }
+    onSuccess() {
+      queryClient.invalidateQueries({ queryKey: ["posts"] });
+      navigate("/");
+    },
   });
   const form = useForm<formValues>({
     resolver: zodResolver(createPostSchema),
-    defaultValues: {
+    defaultValues: initialFormData ?? {
       description: "",
       title: "",
     },
   });
   function onSubmit(data: formValues) {
     mutate(data);
-    form.reset({description:"",title:""})
   }
   return (
     <form
       onSubmit={form.handleSubmit(onSubmit)}
-      className="border  flex flex-col gap-5  p-5 rounded-md w-[30rem]"
+      className="border p-5 flex flex-col gap-5 rounded-md w-[30rem]"
     >
       <Form {...form}>
         <TitleField form={form} />

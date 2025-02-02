@@ -5,7 +5,7 @@ type Props = {}
 
 export default function HomeLayout({}: Props) {
   return (
-    <div className="h-screen w-full  bg-slate-800 text-white">
+    <div className="min-h-screen w-full  bg-slate-800 text-white">
         <Header/>
         <Outlet/>
     </div>
