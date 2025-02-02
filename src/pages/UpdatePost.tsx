@@ -1,9 +1,8 @@
 import UpdatePostForm from "@/components/UpdatePostForm";
 
 
-type Props = {};
 
-export default function UpdatePost({}: Props) {
+export default function UpdatePost() {
 
   return (
     <div className="py-5 flex w-full items-center justify-center  ">

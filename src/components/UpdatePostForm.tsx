@@ -3,14 +3,8 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
   Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
 } from "./ui/form";
-import { Input } from "./ui/input";
-import { Textarea } from "./ui/textarea";
+
 import { Button } from "./ui/button";
 import { z } from "zod";
 import { TPost } from "@/lib/types";
@@ -20,13 +14,11 @@ import { useNavigate, useParams } from "react-router-dom";
 import TitleField from "./TitleField";
 import DescriptionField from "./DescriptionField";
 
-type Props = {
-  initialFormData?: TPost;
-};
+
 
 type formValues = z.infer<typeof createPostSchema>;
 
-export default function UpdatePostForm({}: Props) {
+export default function UpdatePostForm() {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
   const { id } = useParams();

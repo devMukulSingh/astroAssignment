@@ -3,13 +3,7 @@ import { useForm, UseFormReturn } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
   Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
 } from "./ui/form";
-import { Textarea } from "./ui/textarea";
 import { Button } from "./ui/button";
 import { z } from "zod";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
@@ -17,13 +11,12 @@ import { BASE_URL_SERVER } from "@/lib/constants";
 import TitleField from "./TitleField";
 import DescriptionField from "./DescriptionField";
 
-type Props = {};
 
 export type formValues = z.infer<typeof createPostSchema>;
 
-export type TForm = UseFormReturn<formValues, any, undefined>;
+export type TForm = UseFormReturn<formValues, unknown, undefined>;
 
-export default function CreatePostForm({}: Props) {
+export default function CreatePostForm() {
   const queryClient = useQueryClient()
   const { mutate,isPending } = useMutation({
     mutationKey: ["create-post"],
